@@ -3,6 +3,7 @@ const cors = require('cors');
 const connectDB = require('./db/db');
 const cookieParser = require('cookie-parser');
 const authUserRoute = require('./routes/auth.route');
+const captainRoute = require('./routes/captain.route');
 
 connectDB();
 
@@ -17,5 +18,6 @@ app.use(express.urlencoded({extended: true}));
 
 
 app.use('/api/auth', authUserRoute);
+app.use('/api/captain', captainRoute);
 
 module.exports = app;
