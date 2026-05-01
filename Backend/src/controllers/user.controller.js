@@ -72,7 +72,7 @@ const login = async(req,res)=>{
 
         res.cookie('token',token, {httpOnly: true});
 
-        res.json({message: 'Login successful', token, user});
+        res.status(201).json({message: 'Login successful', token, user});
 
 
     }catch(err){
@@ -94,15 +94,15 @@ const logout = async(req,res) => {
 
     try {
         await blacklistModel.create({
-            token
+            token:token
         });
 
         res.clearCookie('token');
-        res.json({message: 'Logout successful'});
+       return  res.status(201).json({message: 'Logout successful'});
 
     } catch (err) {
         console.error(err.message);
-        res.status(400).json({error: err.message});
+        return res.status(400).json({error: err.message});
     }
 
 }
