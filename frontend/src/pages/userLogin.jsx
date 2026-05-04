@@ -24,7 +24,7 @@ const userLogin = () => {
     }
 
   return (
-    <div className='py-4 px-6 flex flex-col justify-between'>
+    <div className='py-4 px-6 flex flex-col justify-between md:ml-[30vw] md:mr-[30vw] md:gap-4'>
         <img className='w-24 mt-4 mb-6' src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Uber_logo_2018.svg/1280px-Uber_logo_2018.svg.png" alt="" />
         
         <form onSubmit={(e) =>{
@@ -64,9 +64,9 @@ const userLogin = () => {
         
 
         <div className='px-1 mt-4 flex flex-col'>
-            <Link to='/captain-signup' className='bg-[#038f21] text-white w-full 
+            <Link to='/captain-login' className='bg-[#038f21] text-white w-full 
             p-2 rounded-lg m-2 flex justify-center items-center'
-            >SignUp as Captain
+            >Login as Captain
             </Link>
         </div>
 
