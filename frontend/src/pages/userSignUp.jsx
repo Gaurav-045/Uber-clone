@@ -1,28 +1,50 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { useContext } from 'react'
+import { UserDataContext } from '../context/UserContext'
+
 
 const userSignUp = () => {
 
-  const [fname, setFname] = useState('');
-  const [lname, setLname] = useState('');
+  const navigate = useNavigate();
+
+  const [firstname, setFname] = useState('');
+  const [lastname, setLname] = useState('');
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [userData, setUserData] = useState({});
 
-  const submitHandler = (e) => {
+  const {user,setUser} = useContext(UserDataContext);
+
+  const submitHandler = async(e) => {
     e.preventDefault();
 
-    setUserData({
+    const newUser = ({
       name: {
-        fname: fname,
-        lname: lname
+        firstname: firstname,
+        lastname: lastname
       },
       email: email,
       password: password
     })
 
 
-    console.log(userData);
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/register`,newUser);
+   
+    if(response.status === 201){
+      const data = response.data;
+
+      setUser(data.user);
+      
+      localStorage.setItem("token",data.token);
+
+      navigate('/home');
+
+    }
+
+    
     setEmail('');
     setPassword('');
     setFname('');
@@ -43,7 +65,7 @@ const userSignUp = () => {
             <div className='w-1/2'>
               <h3 className='ml-5'>First name :</h3>
               <input
-                value={fname}
+                value={firstname}
                 onChange={(e) => {
                   setFname(e.target.value)
                 }}
@@ -56,7 +78,7 @@ const userSignUp = () => {
             <div className='w-1/2'>
               <h3 className='ml-5'>Last name: :</h3>
               <input
-                value={lname}
+                value={lastname}
                 onChange={(e) => {
                   setLname(e.target.value)
                 }}
@@ -93,7 +115,7 @@ const userSignUp = () => {
             placeholder='enter password'
           />
 
-          <button className='bg-[#0b0a09] text-white w-full p-2 rounded-lg m-2'>SignUp</button>
+          <button className='bg-[#0b0a09] text-white w-full p-2 rounded-lg m-2'>Create Account</button>
           <p className='p-3'>Already have account ?  <Link to='/login' className='text-blue-600'>Login</Link></p>
 
         </form>

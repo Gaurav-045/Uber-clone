@@ -92,7 +92,7 @@ const captainSignUp = () => {
             placeholder='enter password'
           />
 
-          <button className='bg-[#0b0a09] text-white w-full p-2 rounded-lg m-2'>SignUp</button>
+          <button className='bg-[#0b0a09] text-white w-full p-2 rounded-lg m-2'>Create Account</button>
           <p className='p-3'>Already have account ?  <Link to='/captain-login' className='text-blue-600'>Login</Link></p>
 
         </form>
