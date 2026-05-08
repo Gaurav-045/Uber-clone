@@ -1,23 +1,15 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 const UserProtectedWrapper = ({ children }) => {
 
     const token = localStorage.getItem('token');
-    const navigate = useNavigate();
 
+    if (!token) {
+        return <Navigate to="/login" replace />;
+    }
 
-        if (!token) {
-            navigate('/login');
-        }
-
-   
-
-    return (
-        <>
-            {children}
-        </>
-    )
+    return children;
 }
 
 export default UserProtectedWrapper
