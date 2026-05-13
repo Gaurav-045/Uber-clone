@@ -43,7 +43,7 @@ const registerCaptain = async(req,res)=>{
         const token = captain.generateAuthToken();
 
        res.cookie('token', token, {httpOnly:true});
-        res.status(201).json({message: 'Captain created successfully', captain});
+        res.status(201).json({message: 'Captain created successfully', captain,token});
 
 
 
@@ -83,11 +83,11 @@ const login = async(req,res) =>{
 
         res.cookie('token',token,{httpOnly:true});
 
-        res.status(201).json({message:'login succesful',captain});
+        res.status(201).json({message:'login succesful',captain,token});
 
 
     }catch(error){
-        console.error(err.message);
+        console.error(error.message);
         return res.status.json({error: error.message})
     }
 
@@ -96,7 +96,7 @@ const login = async(req,res) =>{
 
 const getCaptain = async(req,res) =>{
     const captain = req.captain;
-    res.status(201).json({message:'user profile :',captain});
+    res.status(200).json({message:'user profile :',captain});
 }
 
 

@@ -61,7 +61,7 @@ const captainMiddleware = async(req,res,next) =>{
         next();
 
     }catch(error){
-        console.error(err.message);
+        console.error(error.message);
         return res.status(400).json({message:"error occured"});
     }
 }

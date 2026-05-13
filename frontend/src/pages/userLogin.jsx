@@ -28,8 +28,6 @@ const userLogin = () => {
             
             localStorage.setItem('token',data.token);
 
-            console.log(localStorage.getItem('token'));
-
             navigate('/home');
         }
 

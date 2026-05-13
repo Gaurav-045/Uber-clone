@@ -30,7 +30,7 @@ const userSignUp = () => {
       password: password
     })
 
-
+    setUser(newUser);
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/register`,newUser);
    
     if(response.status === 201){
