@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 import { UserDataContext } from '../context/UserContext';
@@ -8,29 +8,47 @@ const UserProtectedWrapper = ({ children }) => {
 
     const navigate = useNavigate();
 
-    const {user,setUser} = useContext(UserDataContext);
+    const { user, setUser } = useContext(UserDataContext);
 
     const token = localStorage.getItem('token');
 
-    if (!token) {
-        return <Navigate to="/login" replace />;
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+
+        axios.get(`${import.meta.env.VITE_BASE_URL}/api/auth/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((response) => {
+            if (response.status === 200) {
+                const data = response.data;
+                setUser(data.user);
+                setIsLoading(false);
+            }
+        }).catch(err => {
+            console.log(err);
+            localStorage.removeItem('token');
+            setIsLoading(false);
+            navigate('/login');
+        })
+    }, [token, navigate, setUser]);
+
+    if (isLoading) {
+        return (
+            <div>....loading....</div>
+        )
     }
 
-    axios.get(`${import.meta.env.VITE_BASE_URL}/api/auth/profile`,{
-        headers:{
-            Authorization:`Bearer ${token}`
-        }
-    }).then((response) =>{
-        const data = response.data;
-        setUser(data.user);
-
-    }).catch(err =>{
-        console.log(err);
-        navigate('/login');
-        localStorage.removeItem('token');
-    })
-
-    return children;
+    return (
+        <>
+            {children}
+        </>
+    )
 }
 
 export default UserProtectedWrapper

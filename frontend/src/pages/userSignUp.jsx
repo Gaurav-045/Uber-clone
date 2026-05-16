@@ -21,30 +21,30 @@ const userSignUp = () => {
   const submitHandler = async(e) => {
     e.preventDefault();
 
-    const newUser = ({
+    const newUser = {
       name: {
         firstname: firstname,
         lastname: lastname
       },
       email: email,
       password: password
-    })
+    };
 
-    setUser(newUser);
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/register`,newUser);
-   
-    if(response.status === 201){
-      const data = response.data;
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/auth/register`, newUser);
 
-      setUser(data.user);
-      
-      localStorage.setItem("token",data.token);
+      if(response.status === 201){
+        const data = response.data;
 
-      navigate('/home');
-
+        setUser(data.user);
+        localStorage.setItem("token", data.token);
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error('Signup error', error?.response?.data || error.message);
+      alert(error?.response?.data?.error || error?.response?.data?.message || 'Signup failed');
     }
 
-    
     setEmail('');
     setPassword('');
     setFname('');
@@ -111,7 +111,7 @@ const userSignUp = () => {
             }}
             required
             className='bg-[#c7c3c3] py-2 px-4 m-2 w-full'
-            type="text"
+            type="password"
             placeholder='enter password'
           />
 
