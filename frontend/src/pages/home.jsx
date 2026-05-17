@@ -1,4 +1,5 @@
 import React, { use, useRef, useState } from 'react'
+import LocationSearchPanel from '../components/LocationSearchPanel';
 
 const Home = () => {
 
@@ -73,10 +74,14 @@ const Home = () => {
             className='bg-[#eee] p-3 w-full  my-3' type="text" placeholder='enter destination' />
           </form>
         </div>
+
+
         <div 
         ref={panelRef}
-        className='bg-red-300 w-full '>
-            
+        className='bg-white w-full'>
+
+         <LocationSearchPanel/>
+
         </div>
       </div>
 
