@@ -2,6 +2,7 @@ import React, { use, useEffect, useRef, useState } from 'react'
 import LocationSearchPanel from '../components/LocationSearchPanel';
 import VehiclePanel from '../components/VehiclePanel';
 import ConformRide from '../components/ConformRide';
+import WaitingFordriver from '../components/WaitingFordriver';
 
 const Home = () => {
 
@@ -9,11 +10,13 @@ const Home = () => {
   const [destination,setDestination] = useState('');
   const [vpflag,setVpflag] = useState(false);
   const [conflag,setConflag]= useState(false);
+  const [capFound,setCapFound] = useState(false);
 
   const panelRef = useRef();
   const panelRef2 = useRef();
   const vehiclePanelRef = useRef();
   const confirmPanelRef = useRef();
+  const waitingRef = useRef();
 
   const submitHandler = (e) =>{
     e.preventDefault();
@@ -45,6 +48,15 @@ const Home = () => {
       vehiclePanelRef.current.classList.add('translate-y-full');
     }
   },[vpflag]);
+
+  useEffect(()=>{
+    if (capFound === true){
+      waitingRef.current.classList.remove('translate-y-full');
+    }
+    else{
+     waitingRef.current.classList.add('translate-y-full');
+    }
+  },[capFound]);
 
   return (
     <div className='m-0 p-0 relative h-screen overflow-hidden'>
@@ -117,7 +129,11 @@ const Home = () => {
       </div>
 
       <div ref={confirmPanelRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-            <ConformRide setConflag={setConflag}/>
+            <ConformRide setConflag={setConflag} setCapFound={setCapFound}/>
+      </div>
+
+      <div ref={waitingRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
+            <WaitingFordriver setCapFound={setCapFound} />
       </div>
 
     </div>
