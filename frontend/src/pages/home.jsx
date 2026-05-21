@@ -3,6 +3,7 @@ import LocationSearchPanel from '../components/LocationSearchPanel';
 import VehiclePanel from '../components/VehiclePanel';
 import ConformRide from '../components/ConformRide';
 import WaitingFordriver from '../components/WaitingFordriver';
+import DriverConf from '../components/DriverConf';
 
 const Home = () => {
 
@@ -11,12 +12,14 @@ const Home = () => {
   const [vpflag,setVpflag] = useState(false);
   const [conflag,setConflag]= useState(false);
   const [capFound,setCapFound] = useState(false);
+  const [driveFlag,setDriveFlag] = useState(false);
 
   const panelRef = useRef();
   const panelRef2 = useRef();
   const vehiclePanelRef = useRef();
   const confirmPanelRef = useRef();
   const waitingRef = useRef();
+  const driverRef = useRef();
 
   const submitHandler = (e) =>{
     e.preventDefault();
@@ -57,6 +60,15 @@ const Home = () => {
      waitingRef.current.classList.add('translate-y-full');
     }
   },[capFound]);
+
+   useEffect(()=>{
+    if (driveFlag === true){
+      driverRef.current.classList.remove('translate-y-full');
+    }
+    else{
+     driverRef.current.classList.add('translate-y-full');
+    }
+  },[driveFlag]);
 
   return (
     <div className='m-0 p-0 relative h-screen overflow-hidden'>
@@ -134,6 +146,10 @@ const Home = () => {
 
       <div ref={waitingRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
             <WaitingFordriver setCapFound={setCapFound} />
+      </div>
+
+      <div ref={driverRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
+            <DriverConf setDriveFlag={setDriveFlag} />
       </div>
 
     </div>
