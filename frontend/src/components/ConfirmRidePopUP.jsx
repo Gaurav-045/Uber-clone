@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 
 const ConfirmRidePopUP = (props) => {
-  return (
-     <div className='p-4'>
+
+    const [otp, setOtp] = useState('');
+
+    const submitHandler = (e) => {
+        e.prevent.Default();
+
+        setOtp('');
+    }
+
+    return (
+        <div className='p-4'>
             <div className='pb-2'
                 onClick={() => {
                     props.setConfirmRidePopUp(false);
@@ -44,21 +54,29 @@ const ConfirmRidePopUP = (props) => {
                         <p>Cash Cash</p>
                     </div>
                 </div>
-                <div className='p-2'>
-                    <button onClick={() => {
-                    }}
-                        className='w-full p-1 rounded-xl bg-green-300'>Confirm</button>
-                </div>
-                <div className='p-2'>
-                    <button onClick={() => {
-                        props.setConfirmRidePopUp(false);
-                    
-                    }}
-                        className='w-full p-1 rounded-xl bg-gray-400'>Cancel</button>
-                </div>
+                <form onSubmit={(e) => {
+                    submitHandler(e);
+                }}>
+
+                    <input onChange={(e) => {
+                        setOtp(e.target.value);
+                    }} className='w-full bg-[#eee] p-2 mt-5 mb-3 font-mono' type="text " placeholder='Enter OTP' />
+
+                    <div className='p-2'>
+                        <Link to='/captain-riding'
+                            className='w-full  py-2 flex justify-center rounded-xl bg-green-300'>Confirm</Link>
+                    </div>
+                    <div className='p-2'>
+                        <button onClick={() => {
+                            props.setConfirmRidePopUp(false);
+
+                        }}
+                            className='w-full p-2 rounded-xl bg-gray-400'>Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
-  )
+    )
 }
 
 export default ConfirmRidePopUP
