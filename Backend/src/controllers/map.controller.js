@@ -104,4 +104,38 @@ const getDisTime = async (req,res) =>{
 }
 
 
-module.exports = {getCords1,getDisTime};
+const getAutoComplete = async (req, res) => {
+
+    try {
+
+        const { input } = req.query;
+
+        if (!input) {
+            return res.status(400).json({
+                success: false,
+                message: 'Input is required'
+            });
+        }
+
+        const suggestions = await mapService.getSuggestions({ input });
+
+        res.status(200).json({
+            success: true,
+            suggestions
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+
+
+
+module.exports = {getCords1,getDisTime,getAutoComplete};

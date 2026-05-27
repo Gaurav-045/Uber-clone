@@ -55,3 +55,31 @@ module.exports.OsrmRes = async ({originLon,originLat,destinationLon,destinationL
     
     return osrmResponse;
 }
+
+
+
+module.exports.getSuggestions = async ({ input }) => {
+
+    const response = await axios.get(
+        'https://nominatim.openstreetmap.org/search',
+        {
+            params: {
+                q: input,
+                format: 'json',
+                addressdetails: 1,
+                limit: 5
+            },
+            headers: {
+                'User-Agent': 'UberClone/1.0'
+            }
+        }
+    );
+
+    const suggestions = response.data.map((item) => ({
+        name: item.display_name,
+        latitude: item.lat,
+        longitude: item.lon
+    }));
+
+    return suggestions;
+};
