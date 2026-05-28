@@ -39,8 +39,11 @@ const rideSchema = new mongoose.Schema({
     },
     orderId:{
         type:String
+    },
+    otp:{
+        type:String,
+        select:false
     }
-
 })
 
 module.exports = mongoose.model('ride',rideSchema);

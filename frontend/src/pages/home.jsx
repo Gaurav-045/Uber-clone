@@ -1,18 +1,23 @@
-import React, { use, useEffect, useRef, useState } from 'react'
+import axios from 'axios'
+import React, {  useEffect, useRef, useState } from 'react'
 import LocationSearchPanel from '../components/LocationSearchPanel';
 import VehiclePanel from '../components/VehiclePanel';
 import ConformRide from '../components/ConformRide';
 import WaitingFordriver from '../components/WaitingFordriver';
 import DriverConf from '../components/DriverConf';
 
+
 const Home = () => {
 
-  const [pickup,setPickup] = useState('');
-  const [destination,setDestination] = useState('');
-  const [vpflag,setVpflag] = useState(false);
-  const [conflag,setConflag]= useState(false);
-  const [capFound,setCapFound] = useState(false);
-  const [driveFlag,setDriveFlag] = useState(false);
+  const [pickup, setPickup] = useState('');
+  const [destination, setDestination] = useState('');
+  const [vpflag, setVpflag] = useState(false);
+  const [conflag, setConflag] = useState(false);
+  const [capFound, setCapFound] = useState(false);
+  const [driveFlag, setDriveFlag] = useState(false);
+
+  const [segg1,setSegg1] = useState([]);
+  const [activeField,setActiveField] = useState(null);
 
   const panelRef = useRef();
   const panelRef2 = useRef();
@@ -21,54 +26,84 @@ const Home = () => {
   const waitingRef = useRef();
   const driverRef = useRef();
 
-  const submitHandler = (e) =>{
+
+
+
+  async function serverCallFun(val) {
+
+    try {
+
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/autocomplete`, {
+        params: { input: val },
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      })
+
+      const suggetion = response.data.suggestions;
+      setSegg1(suggetion);
+
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+  const submitHandler = (e) => {
     e.preventDefault();
   }
 
-  const panelFun1 = ()=>{
+  const panelFun1 = () => {
     panelRef.current.style.height = '70%';
     panelRef2.current.classList.remove('hidden');
   }
-  const panelFun2 = () =>{
+  const panelFun2 = () => {
     panelRef.current.style.height = '0%';
     panelRef2.current.classList.add('hidden');
   }
 
-  useEffect(()=>{
-    if (conflag === true){
+  useEffect(() => {
+    if (conflag === true) {
       confirmPanelRef.current.classList.remove('translate-y-full');
     }
-    else{
+    else {
       confirmPanelRef.current.classList.add('translate-y-full');
     }
-  },[conflag]);
+  }, [conflag]);
 
-  useEffect(()=>{
-    if (vpflag === true){
+  useEffect(() => {
+    if (vpflag === true) {
       vehiclePanelRef.current.classList.remove('translate-y-full');
     }
-    else{
+    else {
       vehiclePanelRef.current.classList.add('translate-y-full');
     }
-  },[vpflag]);
+  }, [vpflag]);
 
-  useEffect(()=>{
-    if (capFound === true){
+  useEffect(() => {
+    if (capFound === true) {
       waitingRef.current.classList.remove('translate-y-full');
     }
-    else{
-     waitingRef.current.classList.add('translate-y-full');
+    else {
+      waitingRef.current.classList.add('translate-y-full');
     }
-  },[capFound]);
+  }, [capFound]);
 
-   useEffect(()=>{
-    if (driveFlag === true){
+  useEffect(() => {
+    if (driveFlag === true) {
       driverRef.current.classList.remove('translate-y-full');
     }
-    else{
-     driverRef.current.classList.add('translate-y-full');
+    else {
+      driverRef.current.classList.add('translate-y-full');
     }
-  },[driveFlag]);
+  }, [driveFlag]);
 
   return (
     <div className='m-0 p-0 relative h-screen overflow-hidden'>
@@ -81,75 +116,89 @@ const Home = () => {
       </div>
 
       <div className=' flex flex-col justify-end absolute top-0 w-full h-screen'>
-        <div className='h-[30%] p-5 bg-white relative'>
+        <div className='h-[35%] p-5 bg-white relative'>
 
-        <h4 className='mb-2 font-semibold'>Find my trip</h4>
-        <button 
-        onClick={()=>{
-          
-          panelFun2();
-          setVpflag(false);
-        }}
-        ref={panelRef2}
-        className='absolute right-5 top-4 bg-[#abf8bd] px-2 py-1 rounded-2xl hidden'>close</button>
+          <h4 className='mb-2 font-semibold'>Find my trip</h4>
+          <button
+            onClick={() => {
 
-          <form onSubmit={(e) =>{
+              panelFun2();
+              setVpflag(false);
+            }}
+            ref={panelRef2}
+            className='absolute right-5 top-4 bg-[#abf8bd] px-2 py-1 rounded-2xl hidden'>close</button>
+
+          <form onSubmit={(e) => {
             submitHandler(e);
           }}>
 
-            <input 
-            
-            onClick={()=>{
-              
-              panelFun1();
-            }}
-            value={pickup}
-            onChange={(e) =>{
-              setPickup(e.target.value)
-            }}
-            className='bg-[#eee] p-3 w-full  my-3' type="text" placeholder='enter pick up point' />
+            <input
+
+              onClick={() => {
+
+                panelFun1();
+              }}
+              value={pickup}
+              onChange={(e) => {
+                setPickup(e.target.value);
+                setActiveField('pickup');
+                serverCallFun(e.target.value);
+                
+              }}
+              className='bg-[#eee] p-3 w-full  my-3' type="text" placeholder='enter pick up point' />
 
             <input
-            
-            onClick={()=>{
-              
-              panelFun1();
-            }} 
-            value={destination}
-            onChange={(e) =>{
-              setDestination(e.target.value)
-            }}
-            className='bg-[#eee] p-3 w-full  my-3' type="text" placeholder='enter destination' />
-            
+
+              onClick={() => {
+
+                panelFun1();
+              }}
+              value={destination}
+              onChange={(e) => {
+                setDestination(e.target.value);
+                setActiveField('destination');
+                serverCallFun(e.target.value);
+              }}
+              className='bg-[#eee] p-3 w-full  my-3' type="text" placeholder='enter destination' />
+
           </form>
-          
+
+          <button className='w-full py-2 bg-black text-white text-center rounded-lg'
+            onClick={()=>{
+              setVpflag(true);
+            }}
+          >
+            Find Trip
+          </button>
+
         </div>
 
 
-        <div 
-        ref={panelRef}
-        className='bg-white w-full h-0'>
+        <div
+          ref={panelRef}
+          className='bg-white w-full h-0'>
 
-         <LocationSearchPanel setVpflag={setVpflag} />
+          <LocationSearchPanel setVpflag={setVpflag} locations={segg1} activeField={activeField}
+           setDestination={setDestination} setPickup={setPickup} />
 
         </div>
       </div>
 
 
       <div ref={vehiclePanelRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-            <VehiclePanel setConflag={setConflag} setVpflag={setVpflag}/>
+        <VehiclePanel setConflag={setConflag} setVpflag={setVpflag} />
       </div>
 
       <div ref={confirmPanelRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-            <ConformRide setConflag={setConflag} setCapFound={setCapFound}/>
+        <ConformRide setConflag={setConflag} setCapFound={setCapFound} />
       </div>
 
       <div ref={waitingRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-            <WaitingFordriver setCapFound={setCapFound} />
+        <WaitingFordriver setCapFound={setCapFound} />
       </div>
 
       <div ref={driverRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-            <DriverConf setDriveFlag={setDriveFlag} />
+        <DriverConf setDriveFlag={setDriveFlag} />
       </div>
 
     </div>

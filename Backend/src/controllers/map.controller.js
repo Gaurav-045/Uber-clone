@@ -118,7 +118,6 @@ const getAutoComplete = async (req, res) => {
         }
 
         const suggestions = await mapService.getSuggestions({ input });
-
         res.status(200).json({
             success: true,
             suggestions

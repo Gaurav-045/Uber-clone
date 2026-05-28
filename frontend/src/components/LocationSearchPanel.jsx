@@ -1,29 +1,47 @@
 import React from 'react'
 import 'remixicon/fonts/remixicon.css'
 
-
 const LocationSearchPanel = (props) => {
 
-    const locations = [
-        "i2it engineering college, hinjewadi, pune",
-        "Symbiosis engineering college, hinjewadi, pune",
-        "Aarusha homes, rajiv gandhi infotech park, hinjewadi, pune",
-        "Swatwik misal, wakad, pune",
-        "i2it engineering college, hinjewadi, pune"
-    ]
+    function handler(val) {
+        if (props.activeField === 'pickup') {
+            props.setPickup(val);
+        }
+
+        else if (props.activeField === 'destination') {
+            props.setDestination(val);
+        }
+    }
 
     return (
         <div>
-            {locations.map((ele,idx) => {
-                return <div key={idx} onClick={() =>{
-                    props.setVpflag(true);
-                }} className='m-2 p-3 flex flex-row'>
-                <h4><i className="ri-map-pin-2-fill bg-[#eee] px-3 py-2 flex justify-center items-center rounded-full"></i></h4>
-                <div className='ml-3'>{ele}</div>
-            </div>
+
+            {props.locations?.map((ele, idx) => {
+
+                return (
+
+                    <div
+                        key={idx}
+
+                        onClick={() => {
+                            handler(ele.name);
+                        }}
+
+                        className='m-2 p-3 flex flex-row cursor-pointer'
+                    >
+
+                        <h4>
+                            <i className="ri-map-pin-2-fill bg-[#eee] px-3 py-2 flex justify-center items-center rounded-full"></i>
+                        </h4>
+
+                        <div className='ml-3'>
+                            {ele.name}
+                        </div>
+
+                    </div>
+                )
             })}
-            
-            
+
         </div>
     )
 }
