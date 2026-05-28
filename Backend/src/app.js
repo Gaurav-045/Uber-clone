@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const authUserRoute = require('./routes/auth.route');
 const captainRoute = require('./routes/captain.route');
 const mapRoute = require('./routes/map.route')
+const rideRoute = require('./routes/ride.route');
 
 connectDB();
 
@@ -21,5 +22,6 @@ app.use(express.urlencoded({extended: true}));
 app.use('/api/auth', authUserRoute);
 app.use('/api/captain', captainRoute);
 app.use('/maps',mapRoute);
+app.use('/rides',rideRoute);
 
 module.exports = app;
