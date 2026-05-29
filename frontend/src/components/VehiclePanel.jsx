@@ -16,7 +16,8 @@ const VehiclePanel = (props) => {
 
             <div
                 onClick={() => {
-                    props.setConflag(true)
+                    props.setConflag(true);
+                    props.setVehicleType('car');
                 }}
                 className='p-2 flex bg-gray-100 justify-between items-center active:border-2 active:border-black rounded-3xl mb-2'>
                 <img className='w-20' src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=956/height=538/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy8yOWZiYjhiMC03NWIxLTRlMmEtODUzMy0zYTM2NGU3MDQyZmEucG5n" alt="" />
@@ -25,12 +26,13 @@ const VehiclePanel = (props) => {
                     <h5>3 mins away</h5>
                     <p className='text-gray-600 text-base'>Affortable car ride</p>
                 </div>
-                <h2 className='text-xl font-semibold'>193.86</h2>
+                <h2 className='text-xl font-semibold'>₹ {props.fare.car}</h2>
             </div>
 
             <div
                 onClick={() => {
-                    props.setConflag(true)
+                    props.setConflag(true);
+                    props.setVehicleType('bike');
                 }}
                 className='p-2 flex justify-between items-center active:border-2 active:border-black bg-gray-100 rounded-3xl mb-2'>
                 <img className='w-14 pl-3' src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=552/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy85NTM4NTEyZC1mZGUxLTRmNzMtYmQ1MS05Y2VmZjRlMjU0ZjEucG5n" alt="" />
@@ -39,12 +41,13 @@ const VehiclePanel = (props) => {
                     <h5>5 mins away</h5>
                     <p className='text-gray-600 text-base'>Affortable bike ride</p>
                 </div>
-                <h2 className='text-xl font-semibold'>65.12</h2>
+                <h2 className='text-xl font-semibold'>₹ {props.fare.bike}</h2>
             </div>
 
             <div
                 onClick={() => {
-                    props.setConflag(true)
+                    props.setConflag(true);
+                    props.setVehicleType('auto');
                 }}
                 className='p-2 flex bg-gray-100 justify-between items-center active:border-2 active:border-black rounded-3xl mb-2'>
                 <img className='w-18' src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=552/height=552/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy9mYzEwMWZmOC04MWExLTQ2YzMtOTk1YS02N2I0YmJkMmYyYmYuanBn" alt="" />
@@ -53,7 +56,7 @@ const VehiclePanel = (props) => {
                     <h5>1 mins away</h5>
                     <p className='text-gray-600 text-base'>Affortable auto ride</p>
                 </div>
-                <h2 className='text-xl font-semibold'>121.83</h2>
+                <h2 className='text-xl font-semibold'>₹ {props.fare.auto}</h2>
             </div>
         </div>
     )

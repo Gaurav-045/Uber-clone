@@ -29,7 +29,7 @@ const captainLogin = () => {
                 navigate('/captain-home');
             }
         }catch(error){
-            console.log(error.response.data);
+            console.log(error);
         }
 
         setEmail('');

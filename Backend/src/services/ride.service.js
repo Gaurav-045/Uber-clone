@@ -46,9 +46,9 @@ async function getFare(origin, destination) {
         }
 
         const fare = {
-            car: (baseFare.car + (distanceInKM * farePerKm.car)),
-            auto: (baseFare.auto + (distanceInKM * farePerKm.auto)),
-            bike: (baseFare.bike + (distanceInKM * farePerKm.bike)),
+            car: Math.round((baseFare.car + (distanceInKM * farePerKm.car))),
+            auto: Math.round((baseFare.auto + (distanceInKM * farePerKm.auto))),
+            bike: Math.round((baseFare.bike + (distanceInKM * farePerKm.bike))),
         }
         
         return fare;
@@ -61,6 +61,8 @@ async function getFare(origin, destination) {
 
     }
 }
+
+module.exports.getFare = getFare;
 
 function generateOTP() {
 

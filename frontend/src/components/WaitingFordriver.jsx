@@ -21,20 +21,20 @@ const WaitingFordriver = (props) => {
                 <i className="ri-map-pin-fill"></i>
                 <div>
                     <h3 className='font-semibold'>562/11-A</h3>
-                    <p>kasarsai lake, pune</p>
+                    <p>{props.pickup}</p>
                 </div>
             </div>
             <div className='p-2 flex items-center gap-3 border-b border-gray-400'>
                 <i className=" ri-map-pin-line"></i>
                 <div>
                     <h3 className='font-semibold '>363/10-A</h3>
-                    <p>I2IT engineering college, pune</p>
+                    <p>{props.destination}</p>
                 </div>
             </div>
             <div className='p-2 flex items-center gap-3'>
                 <i className="ri-money-rupee-circle-fill"></i>
                 <div>
-                    <h3 className='font-semibold '>193.20</h3>
+                    <h3 className='font-semibold '>{props.fare[props.vehicleType]}</h3>
                     <p>Cash Cash</p>
                 </div>
             </div>

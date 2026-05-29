@@ -1,29 +1,29 @@
 const axios = require('axios');
 
 
-module.exports.getCords2 = async({place}) =>{
+module.exports.getCords2 = async ({ place }) => {
     const response = await axios.get(
-                'https://nominatim.openstreetmap.org/search',
-                {
-                    params: {
-                        q: place,
-                        format: 'json',
-                        limit: 1
-                    },
-                    headers: {
-                        'User-Agent': 'UberClone/1.0'
-                    }
-                }
-            );
-    
-            const data = response.data;
-    
+        'https://nominatim.openstreetmap.org/search',
+        {
+            params: {
+                q: place,
+                format: 'json',
+                limit: 1
+            },
+            headers: {
+                'User-Agent': 'UberClone/1.0'
+            }
+        }
+    );
+
+    const data = response.data;
+
     return data;
 }
 
 
 
-module.exports.getCoordinates = async(place) => {
+module.exports.getCoordinates = async (place) => {
 
     const response = await axios.get(
         'https://nominatim.openstreetmap.org/search',
@@ -43,43 +43,51 @@ module.exports.getCoordinates = async(place) => {
 }
 
 
-module.exports.OsrmRes = async ({originLon,originLat,destinationLon,destinationLat}) =>{
+module.exports.OsrmRes = async ({ originLon, originLat, destinationLon, destinationLat }) => {
     const osrmResponse = await axios.get(
-            `https://router.project-osrm.org/route/v1/driving/${originLon},${originLat};${destinationLon},${destinationLat}`,
-            {
-                params: {
-                    overview: 'false'
-                }
+        `https://router.project-osrm.org/route/v1/driving/${originLon},${originLat};${destinationLon},${destinationLat}`,
+        {
+            params: {
+                overview: 'false'
             }
-        );
-    
+        }
+    );
+
     return osrmResponse;
 }
 
 
 
 module.exports.getSuggestions = async ({ input }) => {
-
-    const response = await axios.get(
-        'https://nominatim.openstreetmap.org/search',
-        {
-            params: {
-                q: input,
-                format: 'json',
-                addressdetails: 1,
-                limit: 5
-            },
-            headers: {
-                'User-Agent': 'UberClone/1.0'
+    try {
+        const response = await axios.get(
+            'https://nominatim.openstreetmap.org/search',
+            {
+                params: {
+                    q: input,
+                    format: 'json',
+                    addressdetails: 1,
+                    limit: 5
+                },
+                headers: {
+                    'User-Agent': 'UberClone/1.0'
+                }
             }
+        );
+
+        const suggestions = response.data.map((item) => ({
+            name: item.display_name,
+            latitude: item.lat,
+            longitude: item.lon
+        }));
+
+        return suggestions;
+    } catch (error) {
+
+        if (error.response?.status === 429) {
+            throw new Error('Too many requests. Please try again later2.');
         }
-    );
 
-    const suggestions = response.data.map((item) => ({
-        name: item.display_name,
-        latitude: item.lat,
-        longitude: item.lon
-    }));
-
-    return suggestions;
+        throw error;
+    }
 };
