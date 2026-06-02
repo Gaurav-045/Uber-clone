@@ -33,4 +33,13 @@ async function initiateSocket(server){
     })
 }
 
-module.exports.initiateSocket = initiateSocket;
+function sendToSoc(socketId,message){
+    if(io){
+        io.to(socketId).emit('message',message);
+    }
+    else{
+        console.log('Socket io not initialized');
+    }
+}
+
+module.exports = {initiateSocket,sendToSoc};

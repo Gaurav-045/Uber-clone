@@ -5,6 +5,9 @@ import VehiclePanel from '../components/VehiclePanel';
 import ConformRide from '../components/ConformRide';
 import WaitingFordriver from '../components/WaitingFordriver';
 import DriverConf from '../components/DriverConf';
+import { UserDataContext } from '../context/UserContext';
+import { SocketContext1 } from '../context/SocketContext';
+import { useContext } from 'react';
 
 
 const Home = () => {
@@ -29,6 +32,13 @@ const Home = () => {
   const driverRef = useRef();
 
 
+  const {user} = useContext(UserDataContext);
+  const {sendMessage,receiveMessage} = useContext(SocketContext1);
+
+  useEffect(()=>{
+    sendMessage("join",{userId:user._id,userType:'user'});
+    
+  },[user])
 
 
   async function serverCallFun(val) {

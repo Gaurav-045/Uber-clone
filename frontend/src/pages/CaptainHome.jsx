@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import CaptainInfo from '../components/CaptainInfo'
 import RidePopUp from '../components/RidePopUp'
 import ConfirmRidePopUP from '../components/ConfirmRidePopUP'
+import { SocketContext1 } from '../context/SocketContext'
+import { CaptainDataContext } from '../context/CaptainContext'
+import { useContext } from 'react'
 
 const CaptainHome = () => {
 
@@ -12,6 +15,14 @@ const CaptainHome = () => {
 
   const ridePopPanel = useRef();
   const confirmRidePanel = useRef();
+
+  const {sendMessage,receiveMessage} = useContext(SocketContext1);
+  const {captain} = useContext(CaptainDataContext);
+
+  useEffect(() => {
+    sendMessage("join",{userId:captain._id,userType:'captain'});
+  },[captain])
+
 
   useEffect(()=>{
     if(ridePopUp === true){
