@@ -4,17 +4,17 @@ const jwt = require('jsonwebtoken');
 
 
 const captainSchema = new mongoose.Schema({
-    name:{
+    name: {
         type: String,
         required: true,
-        minlength :[3, 'Captain name must be at least 3 characters long']
+        minlength: [3, 'Captain name must be at least 3 characters long']
     },
-    email:{
+    email: {
         type: String,
         required: true,
         unique: true,
         match: [/\S+@\S+\.\S+/, 'Please use a valid email address.'],
-        minlength :[5, 'Email must be at least 5 characters long']
+        minlength: [5, 'Email must be at least 5 characters long']
     },
     password: {
         type: String,
@@ -22,55 +22,60 @@ const captainSchema = new mongoose.Schema({
         minlength: [6, 'Password must be at least 6 characters long'],
         select: false
     },
-    socketId:{
+    socketId: {
         type: String
     },
-    vehicle:{
-        color:{
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point'
+        },
+        coordinates: {
+            type: [Number],
+            default: [0, 0]
+        }
+    },
+    vehicle: {
+        color: {
             type: String,
             required: true
         },
-        capacity:{
+        capacity: {
             type: Number,
             required: true
         },
-        model:{
+        model: {
             type: String,
             required: true
         },
-        licensePlate:{
+        licensePlate: {
             type: String,
             required: true,
             unique: true
         },
-        vehicleType:{
+        vehicleType: {
             type: String,
             required: true,
             enum: ['car', 'bike', 'auto']
-        },
-        location:{
-            lat:{
-                type: Number
-            },
-            lon:{
-                type: Number
-            }
         }
     }
 });
 
-captainSchema.methods.generateAuthToken = function() {
+captainSchema.index({ location: '2dsphere' });
+
+captainSchema.methods.generateAuthToken = function () {
     const token = jwt.sign({
         _id: this._id,
     }, process.env.JWT_SECRET, { expiresIn: '7 days' });
 
     return token;
 }
-captainSchema.methods.comparePassword = async function(password){
+captainSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 
-captainSchema.statics.hashPassword = async function(password){
+captainSchema.statics.hashPassword = async function (password) {
     return await bcrypt.hash(password, 10);
 }
 

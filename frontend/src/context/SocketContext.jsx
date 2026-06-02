@@ -29,7 +29,7 @@ const SocketContext = ({children}) => {
     }
 
   return (
-    <SocketContext1.Provider value={{sendMessage,receiveMessage}}>
+    <SocketContext1.Provider value={{sendMessage,receiveMessage,socket}}>
         {children}
     </SocketContext1.Provider>
   )

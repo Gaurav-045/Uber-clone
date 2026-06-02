@@ -1,45 +1,58 @@
-const {Server} = require('socket.io');
+const { Server } = require('socket.io');
 const userModel = require('./src/models/user.model');
 const captainModel = require('./src/models/captain.model');
 
 let io;
 
-async function initiateSocket(server){
-    io = new Server(server,{
-        cors:{
-            origin:"*",
-            methods:["GET","POST"],
-            credentials:true
+async function initiateSocket(server) {
+    io = new Server(server, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"],
+            credentials: true
         }
     }
     )
 
-    io.on("connection",(socket) =>{
+    io.on("connection", (socket) => {
         console.log("New user connected : ", socket.id);
 
-        socket.on('join', async(data) =>{
-            const {userId,userType} = data;
+        socket.on('join', async (data) => {
+            const { userId, userType } = data;
 
-            if (userType === 'user'){
-                await userModel.findByIdAndUpdate(userId,{socketId:socket.id});
-            }else if(userType === 'captain'){
-                await captainModel.findByIdAndUpdate(userId,{socketId:socket.id});
+            if (userType === 'user') {
+                await userModel.findByIdAndUpdate(userId, { socketId: socket.id });
+            } else if (userType === 'captain') {
+                await captainModel.findByIdAndUpdate(userId, { socketId: socket.id });
             }
         })
 
-        socket.on('disconnect',()=>{
+        socket.on('update-captain-location', async (data) => {
+            const { userId, latitude, longitude } = data;
+
+
+           const updated =  await captainModel.findByIdAndUpdate(userId, {
+                location: {
+                    type: 'Point',
+                    coordinates: [longitude, latitude]
+                }
+            })
+        });
+
+        socket.on('disconnect', () => {
             console.log("user disconnected : ", socket.id);
         })
     })
 }
 
-function sendToSoc(socketId,message){
-    if(io){
-        io.to(socketId).emit('message',message);
+function sendToSoc(socketId, messageObj) {
+    console.log("sendToSoc : ",messageObj);
+    if (io) {
+        io.to(socketId).emit(messageObj.event, messageObj.data);
     }
-    else{
+    else {
         console.log('Socket io not initialized');
     }
 }
 
-module.exports = {initiateSocket,sendToSoc};
+module.exports = { initiateSocket, sendToSoc };

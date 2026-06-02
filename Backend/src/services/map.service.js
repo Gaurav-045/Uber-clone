@@ -1,4 +1,5 @@
 const axios = require('axios');
+const captainModel = require('../models/captain.model');
 
 
 module.exports.getCords2 = async ({ place }) => {
@@ -91,3 +92,19 @@ module.exports.getSuggestions = async ({ input }) => {
         throw error;
     }
 };
+
+module.exports.getNearCaptain = async ({ longitude, latitude }) => {
+    const captains = await captainModel.find({
+        location: {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [longitude, latitude]
+                },
+                $maxDistance: 10000 // 5 km
+            }
+        }
+    });
+
+    return captains;
+}
