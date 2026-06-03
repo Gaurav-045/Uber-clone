@@ -63,22 +63,8 @@ const getDisTime = async (req,res) =>{
             });
         }
 
-        // Get origin coordinates
-        const originData = await mapService.getCoordinates(origin);
 
-        // Get destination coordinates
-        const destinationData = await mapService.getCoordinates(destination);
-
-        const originLat = originData.lat;
-        const originLon = originData.lon;
-
-        const destinationLat = destinationData.lat;
-        const destinationLon = destinationData.lon;
-
-        // OSRM Route API
-        const osrmResponse = await mapService.OsrmRes({originLon,originLat,destinationLon,destinationLat});
-
-        const route = osrmResponse.data.routes[0];
+        const route = await mapService.getDistance(origin,destination);
 
         const distanceInKM = (route.distance / 1000).toFixed(2);
 

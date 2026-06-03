@@ -9,8 +9,9 @@ import { useContext } from 'react'
 
 const CaptainHome = () => {
 
-  const [ridePopUp, setRidePopUp] = useState(true);
+  const [ridePopUp, setRidePopUp] = useState(false);
   const [confirmRidePopUp, setConfirmRidePopUp] = useState(false);
+  const [rideData, setRideData] = useState(null);
 
 
   const ridePopPanel = useRef();
@@ -54,8 +55,10 @@ const CaptainHome = () => {
   useEffect(() => {
     socket.on('new-ride', (data) => {
       console.log(data);
+      setRideData(data);
+      setRidePopUp(true);
     });
-  },[socket]);
+  }, [socket]);
 
   useEffect(() => {
     if (ridePopUp === true) {
@@ -89,7 +92,8 @@ const CaptainHome = () => {
         <CaptainInfo />
       </div>
       <div ref={ridePopPanel} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-        <RidePopUp setRidePopUp={setRidePopUp} setConfirmRidePopUp={setConfirmRidePopUp} />
+        <RidePopUp setRidePopUp={setRidePopUp} rideData={rideData}
+          setConfirmRidePopUp={setConfirmRidePopUp} />
       </div>
       <div ref={confirmRidePanel} className='z-4 p-3 h-full bg-white w-full fixed bottom-0 translate-y-full'>
         <ConfirmRidePopUP setConfirmRidePopUp={setConfirmRidePopUp} />

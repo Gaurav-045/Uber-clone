@@ -2,7 +2,7 @@ const axios = require('axios');
 const captainModel = require('../models/captain.model');
 
 
-module.exports.getCords2 = async ({ place }) => {
+const getCords2 = async ({ place }) => {
     const response = await axios.get(
         'https://nominatim.openstreetmap.org/search',
         {
@@ -24,7 +24,7 @@ module.exports.getCords2 = async ({ place }) => {
 
 
 
-module.exports.getCoordinates = async (place) => {
+const getCoordinates = async (place) => {
 
     const response = await axios.get(
         'https://nominatim.openstreetmap.org/search',
@@ -44,7 +44,26 @@ module.exports.getCoordinates = async (place) => {
 }
 
 
-module.exports.OsrmRes = async ({ originLon, originLat, destinationLon, destinationLat }) => {
+
+const getDistance = async (origin, destination) => {
+    const originData = await getCoordinates(origin);
+
+
+    const destinationData = await getCoordinates(destination);
+
+    const originLat = originData.lat;
+    const originLon = originData.lon;
+
+    const destinationLat = destinationData.lat;
+    const destinationLon = destinationData.lon;
+
+
+    const osrmResponse = await OsrmRes({ originLon, originLat, destinationLon, destinationLat });
+
+    return osrmResponse.data.routes[0];
+}
+
+const OsrmRes = async ({ originLon, originLat, destinationLon, destinationLat }) => {
     const osrmResponse = await axios.get(
         `https://router.project-osrm.org/route/v1/driving/${originLon},${originLat};${destinationLon},${destinationLat}`,
         {
@@ -59,7 +78,7 @@ module.exports.OsrmRes = async ({ originLon, originLat, destinationLon, destinat
 
 
 
-module.exports.getSuggestions = async ({ input }) => {
+const getSuggestions = async ({ input }) => {
     try {
         const response = await axios.get(
             'https://nominatim.openstreetmap.org/search',
@@ -93,7 +112,7 @@ module.exports.getSuggestions = async ({ input }) => {
     }
 };
 
-module.exports.getNearCaptain = async ({ longitude, latitude }) => {
+const getNearCaptain = async ({ longitude, latitude }) => {
     const captains = await captainModel.find({
         location: {
             $near: {
@@ -101,10 +120,12 @@ module.exports.getNearCaptain = async ({ longitude, latitude }) => {
                     type: "Point",
                     coordinates: [longitude, latitude]
                 },
-                $maxDistance: 10000 // 5 km
+                $maxDistance: 5000
             }
         }
     });
 
     return captains;
 }
+
+module.exports = {getCoordinates,OsrmRes,getDistance,getNearCaptain,getSuggestions,getCords2};

@@ -2,6 +2,7 @@ const express = require('express');
 const { validationResult } = require('express-validator');
 const rideService = require('../services/ride.service');
 const mapService = require('../services/map.service');
+const rideModel = require('../models/ride.model');
 const { sendToSoc } = require('../../socket');
 
 module.exports.createRide = async (req, res) => {
@@ -14,13 +15,22 @@ module.exports.createRide = async (req, res) => {
 
     const { pickUp, destination, vehicleType } = req.body;
 
+
     try {
+
+        const route = await mapService.getDistance(pickUp, destination);
+
+        const distance = (route.distance / 1000).toFixed(2);
+
         const ride = await rideService.createRide({
             user: req.user._id,
             pickUp,
             destination,
-            vehicleType
+            vehicleType,
+            distance
         })
+
+        console.log(ride);
 
         res.status(201).json(ride);
 
@@ -29,16 +39,16 @@ module.exports.createRide = async (req, res) => {
         const longitude = pickUpCords.lon;
         const latitude = pickUpCords.lat;
 
-        const captains = await mapService.getNearCaptain({longitude,latitude});
+        const captains = await mapService.getNearCaptain({ longitude, latitude });
 
-        
-        
-        ride.otp ="";
+        ride.otp = "";
 
-        captains.map((cap) =>{
-            sendToSoc(cap.socketId,{
-                event:'new-ride',
-                data:ride
+        const rideWithUser = await rideModel.findOne({ _id: ride._id }).populate('user');
+
+        captains.map((cap) => {
+            sendToSoc(cap.socketId, {
+                event: 'new-ride',
+                data: rideWithUser
             })
         });
 

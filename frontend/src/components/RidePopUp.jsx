@@ -16,10 +16,10 @@ const RidePopUp = (props) => {
             <div className='flex items-center justify-between  mb-3 bg-yellow-200 p-2 rounded-xl'>
                 <div className='flex gap-3 items-center'>
                     <img className='w-15 rounded-full h-15 object-center object-cover' src="https://img.magnific.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg?semt=ais_hybrid&w=740&q=80" alt="" />
-                    <p className='text-lg'>Sankalp Hing</p>
+                    <p className='text-lg'>{props.rideData?.user.name.firstname} {props.rideData?.user.name.lastname}</p>
                 </div>
-                <div className='text-right'>
-                    <h2 className='font-semibold text-xl'>8.7 KM</h2>
+                <div className='text-right pr-2'>
+                    <h2 className='font-semibold text-xl'>{props.rideData?.distance} Km</h2>
                 </div>
             </div>
             <div className='p-2'>
@@ -27,20 +27,20 @@ const RidePopUp = (props) => {
                     <i className="ri-map-pin-fill"></i>
                     <div>
                         <h3 className='font-semibold'>562/11-A</h3>
-                        <p>kasarsai lake, pune</p>
+                        <p>{props.rideData?.pickUp}</p>
                     </div>
                 </div>
                 <div className='p-2 flex items-center gap-3 border-b border-gray-400'>
                     <i className=" ri-map-pin-line"></i>
                     <div>
                         <h3 className='font-semibold '>363/10-A</h3>
-                        <p>I2IT engineering college, pune</p>
+                        <p>{props.rideData?.destination}</p>
                     </div>
                 </div>
                 <div className='p-2 flex items-center gap-3'>
                     <i className="ri-money-rupee-circle-fill"></i>
                     <div>
-                        <h3 className='font-semibold '>193.20</h3>
+                        <h3 className='font-semibold '>{props.rideData?.fare}</h3>
                         <p>Cash Cash</p>
                     </div>
                 </div>

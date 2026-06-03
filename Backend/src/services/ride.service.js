@@ -73,7 +73,7 @@ function generateOTP() {
 }
 
 
-module.exports.createRide = async ({ user, pickUp, destination, vehicleType }) => {
+module.exports.createRide = async ({ user, pickUp, destination, vehicleType , distance}) => {
 
     if (!user || !pickUp || !destination || !vehicleType) {
         throw new Error('all fields are required');
@@ -88,7 +88,8 @@ module.exports.createRide = async ({ user, pickUp, destination, vehicleType }) =
         pickUp: pickUp,
         otp : generateOTP(),
         destination: destination,
-        fare: fare[vehicleType]
+        fare: fare[vehicleType],
+        distance:distance
     })
 
     return ride;
