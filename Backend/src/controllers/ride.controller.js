@@ -80,3 +80,24 @@ module.exports.getFare = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
+
+
+module.exports.acceptRide = async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+        const { rideId, captainId } = req.body;
+
+        const ride = await rideService.acceptRideService({ rideId, captainId });
+
+        sendToSoc(ride.user.socketId, {
+            event: 'accept-ride',
+            data: ride
+        })
+    } catch (err) {
+        console.log('an error : ', err);
+    }
+}

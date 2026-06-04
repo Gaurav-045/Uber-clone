@@ -18,8 +18,9 @@ const Home = () => {
   const [conflag, setConflag] = useState(false);
   const [capFound, setCapFound] = useState(false);
   const [driveFlag, setDriveFlag] = useState(false);
-  const [fare,setFare] = useState({});
-  const [vehicleType,setVehicleType] = useState('');
+  const [fare, setFare] = useState({});
+  const [vehicleType, setVehicleType] = useState('');
+  const [rideData,setRideData] = useState(null);
 
   const [segg1, setSegg1] = useState([]);
   const [activeField, setActiveField] = useState(null);
@@ -32,13 +33,21 @@ const Home = () => {
   const driverRef = useRef();
 
 
-  const {user} = useContext(UserDataContext);
-  const {sendMessage,receiveMessage} = useContext(SocketContext1);
+  const { user } = useContext(UserDataContext);
+  const { sendMessage, receiveMessage, socket } = useContext(SocketContext1);
 
-  useEffect(()=>{
-    sendMessage("join",{userId:user._id,userType:'user'});
-    
-  },[user])
+  useEffect(() => {
+    sendMessage("join", { userId: user._id, userType: 'user' });
+
+  }, [user])
+
+
+  useEffect(() => {
+    socket.on('accept-ride', (data) => {
+      setRideData(data);
+      setDriveFlag(true);
+    })
+  }, [socket])
 
 
   async function serverCallFun(val) {
@@ -63,45 +72,43 @@ const Home = () => {
   async function getFare() {
     setVpflag(true);
 
-    try{
+    try {
 
-    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`,{
-      params:{pickUp:pickup,destination:destination},
-      headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}
-    });
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+        params: { pickUp: pickup, destination: destination },
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
 
-    setFare(response.data.fare);
-    console.log(response.data.fare);
+      setFare(response.data.fare);
+      console.log(response.data.fare);
 
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
   }
 
-  async function createRide(){
-    try{
+  async function createRide() {
+    try {
 
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create-ride`,{
-        pickUp:pickup,
-        destination:destination,
-        vehicleType:vehicleType
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create-ride`, {
+        pickUp: pickup,
+        destination: destination,
+        vehicleType: vehicleType
       },
-      {
-        headers:{
-          Authorization:`Bearer ${localStorage.getItem('token')}`
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
         }
-      }
-    )
+      )
 
-    const data = response.data;
-    console.log(data);
+      const data = response.data;
+      console.log(data);
 
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
   }
-
-
 
 
   const submitHandler = (e) => {
@@ -237,21 +244,21 @@ const Home = () => {
 
 
       <div ref={vehiclePanelRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-        <VehiclePanel setConflag={setConflag} setVpflag={setVpflag} fare={fare} setVehicleType={setVehicleType}/>
+        <VehiclePanel setConflag={setConflag} setVpflag={setVpflag} fare={fare} setVehicleType={setVehicleType} />
       </div>
 
       <div ref={confirmPanelRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-        <ConformRide setConflag={setConflag} setCapFound={setCapFound} pickup={pickup} 
-        destination={destination} createRide={createRide} fare={fare} vehicleType={vehicleType}/>
+        <ConformRide setConflag={setConflag} setCapFound={setCapFound} pickup={pickup}
+          destination={destination} createRide={createRide} fare={fare} vehicleType={vehicleType} />
       </div>
 
       <div ref={waitingRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-        <WaitingFordriver setCapFound={setCapFound} pickup={pickup} 
-        destination={destination}  fare={fare} vehicleType={vehicleType}/>
+        <WaitingFordriver setCapFound={setCapFound} pickup={pickup}
+          destination={destination} fare={fare} vehicleType={vehicleType} />
       </div>
 
       <div ref={driverRef} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
-        <DriverConf setDriveFlag={setDriveFlag} />
+        <DriverConf setDriveFlag={setDriveFlag} rideData={rideData} />
       </div>
 
     </div>

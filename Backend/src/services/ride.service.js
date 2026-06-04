@@ -1,4 +1,5 @@
 const rideModel = require('../models/ride.model');
+const { findByIdAndUpdate } = require('../models/user.model');
 const mapService = require('./map.service');
 const crypto = require('crypto');
 
@@ -11,10 +12,10 @@ async function getFare(origin, destination) {
             throw new Error("origin and dest not provided");
         }
 
-        // Get origin coordinates
+        
         const originData = await mapService.getCoordinates(origin);
 
-        // Get destination coordinates
+       
         const destinationData = await mapService.getCoordinates(destination);
 
         const originLat = originData.lat;
@@ -23,7 +24,7 @@ async function getFare(origin, destination) {
         const destinationLat = destinationData.lat;
         const destinationLon = destinationData.lon;
 
-        // OSRM Route API
+        
         const osrmResponse = await mapService.OsrmRes({ originLon, originLat, destinationLon, destinationLat });
 
         const route = osrmResponse.data.routes[0];
@@ -66,7 +67,6 @@ module.exports.getFare = getFare;
 
 function generateOTP() {
 
-    // Generates number between 100000 and 999999
     const otp = crypto.randomInt(100000, 1000000);
 
     return otp.toString();
@@ -95,6 +95,30 @@ module.exports.createRide = async ({ user, pickUp, destination, vehicleType , di
     return ride;
 }
 
+module.exports.acceptRideService = async ({rideId,captainId}) => {
+    try{
+        if(!rideId || !captainId){
+            throw new Error('ride id or captain id required');
+        }
 
+        await rideModel.findByIdAndUpdate({_id:rideId},{
+            status:'accepted',
+            captain:captainId
+        })
+
+        const ride = await rideModel.findOne({
+            _id:rideId
+        }).populate('user').populate('captain').select('+otp');
+
+        if (!ride){
+            throw new Error ('ride not found');
+        }
+
+        return ride;
+
+    }catch(err){
+        console.log(err);
+    }
+}
 
 

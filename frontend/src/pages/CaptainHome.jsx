@@ -6,6 +6,7 @@ import ConfirmRidePopUP from '../components/ConfirmRidePopUP'
 import { SocketContext1 } from '../context/SocketContext'
 import { CaptainDataContext } from '../context/CaptainContext'
 import { useContext } from 'react'
+import axios from 'axios'
 
 const CaptainHome = () => {
 
@@ -19,6 +20,27 @@ const CaptainHome = () => {
 
   const { sendMessage, receiveMessage, socket } = useContext(SocketContext1);
   const { captain } = useContext(CaptainDataContext);
+
+
+  async function acceptRide() {
+    try{
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/accept`,{
+          rideId:rideData._id,
+          captainId:captain._id
+        },
+      {
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      // console.log(response);
+
+    }catch(err){
+      console.log(err);
+    }
+  }
+
 
   useEffect(() => {
     sendMessage("join", { userId: captain._id, userType: 'captain' });
@@ -93,10 +115,10 @@ const CaptainHome = () => {
       </div>
       <div ref={ridePopPanel} className='z-4 p-3 bg-white w-full fixed bottom-0 translate-y-full'>
         <RidePopUp setRidePopUp={setRidePopUp} rideData={rideData}
-          setConfirmRidePopUp={setConfirmRidePopUp} />
+          setConfirmRidePopUp={setConfirmRidePopUp} acceptRide={acceptRide} />
       </div>
       <div ref={confirmRidePanel} className='z-4 p-3 h-full bg-white w-full fixed bottom-0 translate-y-full'>
-        <ConfirmRidePopUP setConfirmRidePopUp={setConfirmRidePopUp} />
+        <ConfirmRidePopUP setConfirmRidePopUp={setConfirmRidePopUp} rideData={rideData}/>
       </div>
     </div>
   )

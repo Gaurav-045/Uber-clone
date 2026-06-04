@@ -48,6 +48,7 @@ const RidePopUp = (props) => {
                     <button onClick={() => {
                         props.setConfirmRidePopUp(true);
                         props.setRidePopUp(false);
+                        props.acceptRide();
                     }}
                         className='w-full p-1 rounded-xl bg-green-300'>Accept</button>
                 </div>

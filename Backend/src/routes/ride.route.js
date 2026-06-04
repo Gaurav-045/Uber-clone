@@ -20,5 +20,11 @@ router.get('/get-fare',
     rideController.getFare
 );
 
+router.post('/accept',
+    authMiddleware.captainMiddleware,
+    body('rideId').notEmpty().withMessage('provide ride Id'),
+    body('captainId').notEmpty().withMessage('provide captain Id'),
+    rideController.acceptRide
+);
 
 module.exports = router;
