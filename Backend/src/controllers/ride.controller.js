@@ -101,3 +101,26 @@ module.exports.acceptRide = async (req, res) => {
         console.log('an error : ', err);
     }
 }
+
+
+module.exports.checkOtp = async (req,res) =>{
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()){
+        return res.status(400).json({erros: errors.array()});
+    }
+
+    try{
+
+    const {rideId,otp} = req.query;
+
+    console.log("in controller : ", rideId);
+
+    const ride = await rideService.confirmOtp({rideId,otp});
+
+    res.status(200).json(ride);
+
+    }catch(err){
+        console.log(err);
+    }
+}

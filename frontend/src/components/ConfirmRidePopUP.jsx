@@ -1,19 +1,36 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const ConfirmRidePopUP = (props) => {
 
-    const [otp, setOtp] = useState('');
+    const navigate = useNavigate();
 
-    const submitHandler = (e) => {
-        e.prevent.Default();
+    const [otp, setOtp] = useState('');
+    const [ride, setRide] = useState(null);
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
+
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
+            params: {
+                rideId: props.rideData._id,
+                otp: otp
+            },
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+
+        if (response.status === 200) {
+            setRide(response.data);
+            console.log(response.data);
+            navigate('/captain-riding');
+        }
 
         setOtp('');
     };
 
-    async function checkOtp(){
-
-    }
 
     return (
         <div className='p-4'>
@@ -64,16 +81,20 @@ const ConfirmRidePopUP = (props) => {
 
                     <input onChange={(e) => {
                         setOtp(e.target.value);
-                    }} className='w-full bg-[#eee] p-2 mt-5 mb-3 font-mono' type="text " placeholder='Enter OTP' />
+                    }} className='w-full bg-[#eee] p-2 mt-5 mb-3 font-mono' type="text" placeholder='Enter OTP' />
 
-                    <div className='p-2'>
-                        <Link to='/captain-riding'
-                            className='w-full  py-2 flex justify-center rounded-xl bg-green-300'>Confirm</Link>
-                    </div>
-                    <div className='p-2'>
-                        <button type='submit'
-                            className='w-full p-2 rounded-xl bg-gray-400'>Cancel</button>
-                    </div>
+                    <button
+                        type='submit'
+                        className='w-full py-2 rounded-xl my-2 bg-green-300'>
+                        Confirm
+                    </button>
+
+                    <button
+                        type='button'
+                        onClick={() => props.setConfirmRidePopUp(false)}
+                        className='w-full p-2 rounded-xl bg-gray-400'>
+                        Cancel
+                    </button>
                 </form>
             </div>
         </div>

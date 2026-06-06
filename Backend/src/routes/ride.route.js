@@ -27,4 +27,10 @@ router.post('/accept',
     rideController.acceptRide
 );
 
+router.get('/confirm',
+    query('rideId').notEmpty().withMessage('rideId should not be empty'),
+    query('otp').isString().withMessage('otp should not be empty'),
+    rideController.checkOtp
+)
+
 module.exports = router;
