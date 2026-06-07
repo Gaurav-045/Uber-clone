@@ -8,9 +8,13 @@ import DriverConf from '../components/DriverConf';
 import { UserDataContext } from '../context/UserContext';
 import { SocketContext1 } from '../context/SocketContext';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import MapComponent from '../components/MapComponent';
 
 
 const Home = () => {
+
+  const navigate = useNavigate();
 
   const [pickup, setPickup] = useState('');
   const [destination, setDestination] = useState('');
@@ -20,7 +24,7 @@ const Home = () => {
   const [driveFlag, setDriveFlag] = useState(false);
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState('');
-  const [rideData,setRideData] = useState(null);
+  const [rideData, setRideData] = useState(null);
 
   const [segg1, setSegg1] = useState([]);
   const [activeField, setActiveField] = useState(null);
@@ -49,6 +53,12 @@ const Home = () => {
     })
   }, [socket])
 
+
+  useEffect(() => {
+    socket.on('otp-confirm', (data) => {
+      navigate('/riding', { state: { ride: data } });
+    });
+  }, [socket]);
 
   async function serverCallFun(val) {
 
@@ -165,11 +175,10 @@ const Home = () => {
   return (
     <div className='m-0 p-0 relative h-screen overflow-hidden'>
 
-      <img className='absolute w-16 left-5 top-5' src="https://cdn.mos.cms.futurecdn.net/5ij5qdSHFzJ2piPRuoTL5F.jpg" alt="" />
+      <img className='absolute w-16 right-5 top-5' src="https://cdn.mos.cms.futurecdn.net/5ij5qdSHFzJ2piPRuoTL5F.jpg" alt="" />
 
-      <div className='h-screen w-full'>
-        <img className='h-screen object-cover w-full' src="https://cdn.theatlantic.com/thumbor/BlEOtTo9L9mjMLuyCcjG3xYr4qE=/0x48:1231x740/960x540/media/img/mt/2017/04/IMG_7105/original.png" alt="" />
-
+      <div className="fixed top-0 left-0 h-screen w-full z-0">
+        <MapComponent />
       </div>
 
       <div className=' flex flex-col justify-end absolute top-0 w-full h-screen'>

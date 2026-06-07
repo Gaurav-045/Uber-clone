@@ -114,9 +114,13 @@ module.exports.checkOtp = async (req,res) =>{
 
     const {rideId,otp} = req.query;
 
-    console.log("in controller : ", rideId);
 
     const ride = await rideService.confirmOtp({rideId,otp});
+
+    sendToSoc(ride.user.socketId,{
+        event:'otp-confirm',
+        data:ride
+    });
 
     res.status(200).json(ride);
 
@@ -124,3 +128,31 @@ module.exports.checkOtp = async (req,res) =>{
         console.log(err);
     }
 }
+
+
+module.exports.finish = async(req,res) =>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()){
+        return res.status(400).json({errors:errors.array()});
+    }
+
+    try{
+
+        const {rideId} = req.body;
+
+        const data = await rideService.finish(rideId);
+
+        console.log(data);
+
+        // sendToSoc()
+
+        return res.status(200).json(data);
+
+    }catch(err){
+        return res.status(500).json({
+            message:err.message
+        })
+    }
+}
+
+

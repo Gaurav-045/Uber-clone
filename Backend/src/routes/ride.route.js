@@ -33,4 +33,9 @@ router.get('/confirm',
     rideController.checkOtp
 )
 
+router.post('/finish',
+    body('rideId').isMongoId().withMessage('give mongo url'),
+    rideController.finish
+)
+
 module.exports = router;

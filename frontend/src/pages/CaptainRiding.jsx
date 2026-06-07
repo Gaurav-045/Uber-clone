@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import FinishRide from '../components/FinishRide';
 
 const CaptainRiding = () => {
+
+    const location = useLocation();
+    const {ride} = location.state || {};
 
     const [finish, setFinish] = useState(false);
 
@@ -36,7 +39,7 @@ const CaptainRiding = () => {
                 <div className='w-full flex items-center justify-between px-4'>
 
                     <div className='px-5'>
-                        <h3 className='font-semibold text-xl'>4.5 KM away</h3>
+                        <h3 className='font-semibold text-xl'>{ride.distance} KM away</h3>
                     </div>
                     <div className='px-5'>
                         <button className='px-9 py-2 bg-green-500 text-white rounded-xl'>
@@ -46,7 +49,7 @@ const CaptainRiding = () => {
                 </div>
             </div>
             <div ref={finishRef} className='z-4 p-3 h-full bg-white w-full fixed bottom-0 translate-y-full'>
-               <FinishRide/>
+               <FinishRide ride={ride}/>
             </div>
         </div>
     )

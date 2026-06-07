@@ -144,7 +144,7 @@ module.exports.confirmOtp = async ({ rideId, otp }) => {
             {
                 returnDocument: 'after'
             }
-        );
+        ).populate('user').populate('captain');
 
         return ride;
 
@@ -154,3 +154,17 @@ module.exports.confirmOtp = async ({ rideId, otp }) => {
 }
 
 
+module.exports.finish = async (rideId) => {
+    try {
+        if (!rideId) {
+            throw new Error('rideId not provided');
+        }
+
+        const data = await rideModel.findByIdAndDelete(rideId);
+
+        return data;
+
+    } catch (err) {
+        console.log(err);
+    }
+}

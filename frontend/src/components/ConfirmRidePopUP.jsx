@@ -24,8 +24,9 @@ const ConfirmRidePopUP = (props) => {
 
         if (response.status === 200) {
             setRide(response.data);
-            console.log(response.data);
-            navigate('/captain-riding');
+            console.log("In confirm ride : ",response.data);
+            
+            navigate('/captain-riding',{state:{ride:response.data}});
         }
 
         setOtp('');
